@@ -17,6 +17,7 @@ class PersonDetails {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = name;
     data['age'] = age;
+    data['id'] = id;
     return data;
   }
 }

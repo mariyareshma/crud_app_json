@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:crud_app_json/model/person_model.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -45,24 +44,23 @@ Future writePersonToFile(List<PersonDetails> files) async {
 }
 
 //create a function to add a learning to the list
-Future addToFile(PersonDetails fileObj) async {
-  var listofFile = await readAllFile();
-  listofFile.add(fileObj);
-  await writePersonToFile(listofFile);
+Future addToPerson(PersonDetails fileObj) async {
+  var listofPerson = await readAllFile();
+  listofPerson.add(fileObj);
+  await writePersonToFile(listofPerson);
 }
 
 //create a function to delete Person from the list
-Future deleteFromFile(PersonDetails fileObj) async {
-  var listofFile = await readAllFile();
-
-  listofFile.removeWhere((element) => element.id == fileObj.id);
-
-  //listofPerson.remove(fileObj);
-  await writePersonToFile(listofFile);
+Future deleteFromPerson(PersonDetails fileObj) async {
+  var listofPerson = await readAllFile();
+  listofPerson.removeWhere((element) => element.id == fileObj.id);
+  await writePersonToFile(listofPerson);
 }
 
 //create a function to edit a Person list
-Future editFile(PersonDetails oldPersonObj, PersonDetails newPersonObj) async {
-  await deleteFromFile(oldPersonObj);
-  await addToFile(newPersonObj);
+Future editPerson(PersonDetails fileObj) async {
+  var listofPerson = await readAllFile();
+  var index = listofPerson.indexWhere((element) => element.id == fileObj.id);
+  listofPerson[index] = fileObj;
+  await writePersonToFile(listofPerson);
 }
