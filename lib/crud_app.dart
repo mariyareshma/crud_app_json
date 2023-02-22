@@ -1,3 +1,4 @@
+import 'package:crud_app_json/view/home_page.dart';
 import 'package:flutter/material.dart';
 
 class CrudApp extends StatelessWidget {
@@ -5,6 +6,6 @@ class CrudApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const HomePage();
   }
 }
