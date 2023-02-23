@@ -1,5 +1,6 @@
 import 'package:crud_app_json/model/person_model.dart';
 import 'package:crud_app_json/view/person_widget.dart';
+import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/material.dart';
 import '../data/json_file.dart';
 import 'add_edit_Person.dart';
@@ -68,18 +69,35 @@ class HomePageState extends State<HomePage> {
     return filteredList;
   }
 
+  List<String> getSuggestions() {
+    var suggestion = <String>[];
+    for (var item in originalList) {
+      if (suggestion.contains(item.name) == false) suggestion.add(item.name!);
+    }
+    return suggestion;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crud App'),
+      appBar: EasySearchBar(
+        title: const Text('Crud Search'),
+        suggestionTextStyle:
+            const TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
+        suggestions: getSuggestions(),
+        onSearch: (value) async {
+          searchPerson = value;
+
+          await filterResults();
+          setState(() {});
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var newPerson = await addEditPerson(null);
           if (newPerson != null) {
             await addToPerson(newPerson);
-            await filterResults();
+            filterResults();
             setState(() {});
           }
         },
@@ -95,18 +113,8 @@ class HomePageState extends State<HomePage> {
           if (snapshot.hasData) {
             var data = snapshot.data;
 
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  searchBar(),
-                  Expanded(
-                    child: ListView(
-                      children: getPersonWidgets(filteredList),
-                    ),
-                  ),
-                ],
-              ),
+            return ListView(
+              children: getPersonWidgets(data!),
             );
           }
           return const Center(
@@ -123,7 +131,7 @@ class HomePageState extends State<HomePage> {
                 var canDelete = await showConfirmation(e);
                 if (canDelete != null && canDelete) {
                   await deleteFromPerson(e);
-                  await filterResults();
+                  filterResults();
                   setState(() {});
                 }
               },
@@ -131,7 +139,7 @@ class HomePageState extends State<HomePage> {
                 var newPerson = await addEditPerson(e);
                 if (newPerson != null) {
                   await editPerson(newPerson);
-                  await filterResults();
+                  filterResults();
                   setState(() {});
                 }
               },
@@ -141,19 +149,19 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget searchBar() {
-    return TextField(
-      keyboardType: TextInputType.name,
-      decoration: const InputDecoration(
-        constraints: BoxConstraints(minWidth: 20, minHeight: 20),
-        hintText: 'search',
-        labelText: 'search the Person',
-        icon: Icon(Icons.search),
+    return SizedBox(
+      height: 40,
+      child: EasySearchBar(
+        appBarHeight: 40,
+        title: const Text('Crud Search'),
+        //suggestions: getSuggestions(),
+        onSearch: (value) async {
+          searchPerson = value;
+
+          await filterResults();
+          setState(() {});
+        },
       ),
-      onChanged: (value) async {
-        searchPerson = value;
-        await filterResults();
-        setState(() {});
-      },
     );
   }
 }
