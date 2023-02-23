@@ -72,7 +72,7 @@ class HomePageState extends State<HomePage> {
   List<String> getSuggestions() {
     var suggestion = <String>[];
     for (var item in originalList) {
-      suggestion.add(item.name!);
+      if (suggestion.contains(item.name) == false) suggestion.add(item.name!);
     }
     return suggestion;
   }
@@ -83,8 +83,7 @@ class HomePageState extends State<HomePage> {
       appBar: EasySearchBar(
         title: const Text('Crud Search'),
         suggestionTextStyle:
-            const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-        actions: [],
+            const TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
         suggestions: getSuggestions(),
         onSearch: (value) async {
           searchPerson = value;
